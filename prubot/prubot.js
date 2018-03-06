@@ -28,11 +28,11 @@ class PruBot {
             let responseData = response.result.fulfillment.data;
             let responseMessages = response.result.fulfillment.messages;
             if (responseMessages) {
-                return {text: responseMessages};
+                return {text: responseMessages[2].speech, userId: message.userId};
             } else if (responseText) {
-                return {text: responseText};
+                return {text: responseText, userId: message.userId};
             } else {
-                return {text: 'no response'};
+                return {text: 'no response', userId: message.userId};
             }
         }
     }

@@ -32,6 +32,8 @@ describe('post chat message', () => {
         expect(answer.text).to.not.be.empty;
         console.log(answer);
         expect(res.status).to.eq(200);
+        expect(answer.text).to.not.be.empty;
+        expect(answer.userId).to.eq('123');
     });
 
 });
