@@ -19,7 +19,9 @@ class Application {
 
         this.app.post('/message', async (req, res) => {
             console.log('request.body: ', req.body);
-            res.json(await this.bot.message(req.body));
+            let ackMessage = await this.bot.message(req.body);
+            console.log('ack: ', JSON.stringify(ackMessage));
+            res.json(ackMessage);
         });
 
         this.server = this.app.listen(this.port, '0.0.0.0', () => {
