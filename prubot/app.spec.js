@@ -7,7 +7,9 @@ describe('post chat message', () => {
 
     before(() => {
         var port = Math.floor(Math.random() * 1000) + 12000;
-        app = new Application(port);
+        const PruBot = require('./prubot').PruBot;
+        let bot = new PruBot(process.env.APIAI_ACCESS_TOKEN || 'b339df6ba3d144028e53cd6a8a3f4e50');
+        app = new Application(port, bot);
         app.start();
     });
 
@@ -22,11 +24,13 @@ describe('post chat message', () => {
                 'Content-Type': 'application/json'
             },
             body: JSON.stringify({
-                message : 'test'
+                text : 'hello',
+                userId: '123'
             })
         });
         const answer = await res.json();
         expect(answer.text).to.not.be.empty;
+        console.log(answer);
         expect(res.status).to.eq(200);
     });
 

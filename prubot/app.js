@@ -1,29 +1,30 @@
 var express = require('express');
+var PruBot = require('./prubot').PruBot;
 
 class Application {
-    constructor(port) {
+    constructor(port, bot) {
         this.port = port;
         this.app = express();
         this.server = null;
+        this.bot = bot;
     }
 
     start() {
         this.app.use(express.json());
-        this.app.use(function (err, req, res, next) {
+        this.app.use((err, req, res, next) => {
             console.error(err.stack);
             console.log(res);
             res.status(500).send('Something broke!');
         });
 
-        this.app.post('/message', function (req, res) {
+        this.app.post('/message', async (req, res) => {
             console.log('request.body: ', req.body);
-            res.json({text: 'Hello world!'});
+            res.json(await this.bot.message(req.body));
         });
 
-        this.server = this.app.listen(this.port, function () {
+        this.server = this.app.listen(this.port, '0.0.0.0', () => {
             console.log(`App listening on port ${this.port}!`);
         });
-
     }
 
     stop() {
@@ -33,7 +34,8 @@ class Application {
 
 
 if (require.main === module) {
-    new Application(3000).start();
+    let bot = new PruBot(process.env.APIAI_ACCESS_TOKEN || 'b339df6ba3d144028e53cd6a8a3f4e50');
+    new Application(3000, bot).start();
     process.on('uncaughtException', (exception) => {
         console.error('uncaughtException: ', exception);
         process.exit(1);
