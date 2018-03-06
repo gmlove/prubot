@@ -1,0 +1,26 @@
+{
+    "name": "prubot",
+    "version": "1.0.0",
+    "description": "Prudential Chatbot",
+    "main": "prubot/app.js",
+    "dependencies": {
+        "apiai": "^3.0.3",
+        "body-parser": "^1.15.2",
+        "express": "^4.13.3",
+        "request": "^2.73.0",
+        "node-fetch": "^1.7.3",
+        "underscore": "^1.8.3"
+    },
+    "devDependencies": {
+        "chai": "^4.1.2",
+        "eslint": "^4.11.0",
+        "mocha": "^4.0.1",
+        "sinon": "^4.1.2"
+    },
+    "scripts": {
+        "pretest": "yarn install",
+        "test": "mocha prubot/**/*.spec.js",
+        "prestart": "yarn install",
+        "start": "node prubot/app.js"
+    }
+}

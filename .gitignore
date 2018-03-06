@@ -1,0 +1,5 @@
+data/
+node_modules/
+*.html
+*.links
+chrome-user-data*/
