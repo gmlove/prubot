@@ -38,7 +38,7 @@ describe('post chat message', () => {
         expect(answer.userId).to.eq('123');
     });
 
-    it.only('should get an answer for image from bot service', async () => {
+    it('should get an answer for image from bot service', async () => {
         const res = await fetch(`http://localhost:${app.port}/message`, {
             method: 'POST',
             headers: {

@@ -1,7 +1,7 @@
 const apiai = require('apiai');
 const uuid = require('uuid');
 const _ = require('underscore');
-const { CreditCardExtractor } = require('./ocr');
+const { CreditCardExtractor, InvoiceAmountExtractor } = require('./ocr');
 
 class PruBot {
 
@@ -9,11 +9,25 @@ class PruBot {
         this.apiaiService = apiai(accessToken, {language: language || 'en'});
         this.sessionIds = new Map();
         this.ocrService = ocrService;
+        this.dialogHistory = new Map();
+    }
+
+    isAskingFor(userId) {
+        return 'credit-card';
     }
 
     async message(message) {
         if (message.image) {
-            message.text = await this._extractCreditCard(message.image);
+            switch(this.isAskingFor(message.userId)) {
+            case 'credit-card':
+                message.text = await this._extractCreditCard(message.image);
+                break;
+            case 'bill-amount':
+                message.text = await this._extractCreditCard(message.image);
+                break;
+            default:
+                throw new Error('not supported image type.');
+            }
             console.log(message.text);
         }
         if (!this.sessionIds.has(message.userId)) {
@@ -49,6 +63,11 @@ class PruBot {
     async _extractCreditCard(image) {
         let text = await this.ocrService.recognize(image);
         return new CreditCardExtractor().extract(text);
+    }
+
+    async _extractBillAmount(image) {
+        let text = await this.ocrService.recognize(image);
+        return new InvoiceAmountExtractor().extract(text);
     }
 
 }
