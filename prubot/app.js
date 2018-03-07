@@ -1,5 +1,7 @@
-var express = require('express');
-var PruBot = require('./prubot').PruBot;
+const express = require('express');
+const bodyParser = require('body-parser');
+const PruBot = require('./prubot').PruBot;
+const { OCRService } = require('./ocr');
 
 class Application {
     constructor(port, bot) {
@@ -10,7 +12,8 @@ class Application {
     }
 
     start() {
-        this.app.use(express.json());
+        this.app.use(bodyParser.json({limit: '5mb'}));
+        this.app.use(bodyParser.urlencoded({limit: '5mb'}));
         this.app.use((err, req, res, next) => {
             console.error(err.stack);
             console.log(res);
@@ -18,7 +21,7 @@ class Application {
         });
 
         this.app.post('/message', async (req, res) => {
-            console.log('request.body: ', req.body);
+            console.log('request.body.keys: ', Object.keys(req.body));
             let ackMessage = await this.bot.message(req.body);
             console.log('ack: ', JSON.stringify(ackMessage));
             res.json(ackMessage);
@@ -37,7 +40,8 @@ class Application {
 
 if (require.main === module) {
     let bot = new PruBot(process.env.APIAI_ACCESS_TOKEN || 'b339df6ba3d144028e53cd6a8a3f4e50');
-    new Application(3000, bot).start();
+    let ocrService = new OCRService('AIzaSyBCmBskZqIYZAMi3CjB4cNRqJOv3K-sTHQ');
+    new Application(3000, bot, ocrService).start();
     process.on('uncaughtException', (exception) => {
         console.error('uncaughtException: ', exception);
         process.exit(1);
