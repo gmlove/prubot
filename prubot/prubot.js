@@ -16,7 +16,7 @@ class PruBot {
         return 'credit-card';
     }
 
-    async message(message) {
+    async tryTranslateImage(message) {
         if (message.image) {
             switch(this.isAskingFor(message.userId)) {
             case 'credit-card':
@@ -28,8 +28,12 @@ class PruBot {
             default:
                 throw new Error('not supported image type.');
             }
-            console.log(message.text);
+            console.log('translated message to text: ', message.text);
         }
+    }
+
+    async message(message) {
+        await this.tryTranslateImage(message);
         if (!this.sessionIds.has(message.userId)) {
             this.sessionIds.set(message.userId, uuid.v4());
         }
