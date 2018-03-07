@@ -1,5 +1,6 @@
 const apiai = require('apiai');
 const uuid = require('uuid');
+const fs = require('fs');
 const _ = require('underscore');
 const { CreditCardExtractor, InvoiceAmountExtractor } = require('./ocr');
 
@@ -17,6 +18,9 @@ class PruBot {
     }
 
     async tryTranslateImage(message) {
+        if (message.imageId) {
+            message.image = new Buffer(fs.readFileSync(`/tmp/${message.imageId}`)).toString('base64');
+        }
         if (message.image) {
             switch(this.isAskingFor(message.userId)) {
             case 'credit-card':
@@ -76,7 +80,6 @@ class PruBot {
         let response = await this._parseResponse(apiaiRequest);
         let ack = this.constructAck(message, response);
         this.dialogHistories.get(message.userId).push({q: message, a: ack});
-        console.log(`ack from bor: ${ack}`);
         return ack;
     }
 

@@ -34,7 +34,7 @@ describe('image recognizer', () => {
         expect(invoiceAmount).to.eq(315);
     });
 
-    it.only('should extract data from new invoice', async () => {
+    it.skip('should extract data from new invoice', async () => {
         const text = await ocr.recognize(fs.readFileSync('./resource_test/sample_invoice.b64', 'utf8'));
         const invoiceAmount = invoiceAmountExtractor.extract(text);
         expect(invoiceAmount).to.eq(315);
