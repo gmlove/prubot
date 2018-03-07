@@ -1,0 +1,105 @@
+{
+  "request": {
+    "chatbotQuestion": "Am I eligible for the procedure",
+    "currentClaim": {
+      "claimID": "1000001",
+      "policyID": "10XXXX0101",
+      "type": "Medical",
+      "deathclaimIndicator": null,
+      "disabilityIndicator": null,
+      "criticalIllnessIndicator": null,
+      "medicalClaimsIndicator": null,
+      "accidentIndicator": null,
+      "medicalWastageScore": 10517320,
+      "hospitalizationNecessaryScore": 0.0,
+      "preExistingConditiionScore": 10517320,
+      "policyNonDIsclosureScore": 10517320,
+      "billedAmountValue": 15000,
+      "billAmountCurrency": "HKD",
+      "submissionDate": "2016-08-16T12:42:28.000+0000",
+      "approvedDate": "2016-08-16T12:42:28.000+0000",
+      "claimRedFlagCategoryList": [
+        ""
+      ],
+      "benefitCodes": [
+        null
+      ],
+      "claimEvents": [
+        {
+          "eventStartDate": "2016-08-16T12:42:28.000+0000",
+          "eventEndDate": "2016-08-16T12:42:28.000+0000",
+          "eventType": "01",
+          "eventId": "123XYZ",
+          "diagnosisList": [
+            {
+              "code": "455.6",
+              "type": null,
+              "description": null,
+              "firstDetectionDate": "2016-08-16T12:42:28.000+0000",
+              "maxClaimPeriodinDays": 0,
+              "diagnosisJETEligibilityStatus": null
+            }
+          ],
+          "medicalCenter": {
+            "code": "115",
+            "name": null,
+            "geographicArea": null,
+            "medicalCenterType": null
+          },
+          "treatments": []
+        }
+      ],
+      "unstructuredDataFlag": null,
+      "policyAndBenefitElibigilityStatus": null,
+      "benefitTypeList": [
+        {
+          "benefitCode": 3,
+          "benefitType": null,
+          "benefitDate": "2016-08-16T12:42:28.000+0000"
+        }
+      ],
+      "claimHospitalInDate": "2016-08-16T12:42:28.000+0000",
+      "claimHospitalOutDate": "2016-08-16T12:42:28.000+0000"
+    },
+    "policy": [
+      {
+        "policyID": "123456789ABCxyz",
+        "policyHolder": {
+          "name": null,
+          "id": "",
+          "address": null,
+          "dateOfBirth": "2016-08-16T12:42:28.000+0000"
+        },
+        "lifeAssured": {
+          "name": null,
+          "id": null,
+          "address": null,
+          "dateOfBirth": "2016-08-16T12:42:28.000+0000"
+        },
+        "riskCommencementDate": "2016-08-16T12:42:28.000+0000",
+        "products": [
+          {
+            "code": "HCPN3",
+            "name": null,
+            "description": null,
+            "jetEligibility": null
+          }
+        ],
+        "coveredDiagnosisCodesList": [
+          null
+        ],
+        "excludedDiagnosisCodes": [
+          null
+        ],
+        "policyLastRevivalDate": "2016-08-16T12:42:28.000+0000",
+        "policyEffectiveDate": "2016-08-16T12:42:28.000+0000",
+        "policyInForceDate": "2016-08-16T12:42:28.000+0000",
+        "policyCurrency": "HKD"
+      }
+    ],
+    "previousClaims": [],
+    "evalStatus": null,
+    "decision": null
+  },
+  "__DecisionID__": "123456789abcXYZ"
+}

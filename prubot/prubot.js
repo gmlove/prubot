@@ -9,7 +9,7 @@ class PruBot {
         this.apiaiService = apiai(accessToken, {language: language || 'en'});
         this.sessionIds = new Map();
         this.ocrService = ocrService;
-        this.dialogHistory = new Map();
+        this.dialogHistories = new Map();
     }
 
     isAskingFor(userId) {
@@ -32,36 +32,71 @@ class PruBot {
         }
     }
 
-    async message(message) {
-        await this.tryTranslateImage(message);
-        if (!this.sessionIds.has(message.userId)) {
-            this.sessionIds.set(message.userId, uuid.v4());
-        }
-        console.log(`request to apiai: '${message.text}'`);
-        let apiaiRequest = this.apiaiService.textRequest(message.text, {
+    async _initiate(message) {
+        console.log('send welcome request to apiai');
+        let apiaiRequest = this.apiaiService.eventRequest({name: 'Welcome'}, {
             sessionId: this.sessionIds.get(message.userId)
         });
-        let response = await new Promise((resolve, reject) => {
+        let response = await this._parseResponse(apiaiRequest);
+        let ack = this.constructAck(message, response);
+        return ack;
+    }
+
+    async _parseResponse(apiaiRequest) {
+        return new Promise((resolve, reject) => {
             apiaiRequest.on('response', (response) => {
+                console.log('response from apiai:', JSON.stringify(response));
                 resolve(response);
             });
             apiaiRequest.on('error', (error) => reject(error));
             apiaiRequest.end();
         });
-        console.log('response from apiai:', JSON.stringify(response));
+    }
+
+    async message(message) {
+        await this.tryTranslateImage(message);
+        if (!this.sessionIds.has(message.userId)) {
+            this.sessionIds.set(message.userId, uuid.v4());
+        }
+        if (!this.dialogHistories.has(message.userId)) {
+            this.dialogHistories.set(message.userId, []);
+        }
+        if (!message.text && !message.image) {
+            return await this._initiate(message);
+        } else {
+            return await this._message(message);
+        }
+    }
+
+    async _message(message) {
+        console.log(`request to apiai: '${message.text}'`);
+        let apiaiRequest = this.apiaiService.textRequest(message.text, {
+            sessionId: this.sessionIds.get(message.userId)
+        });
+        let response = await this._parseResponse(apiaiRequest);
+        let ack = this.constructAck(message, response);
+        this.dialogHistories.get(message.userId).push({q: message, a: ack});
+        return ack;
+    }
+
+    constructAck(message, response) {
+        let ack;
         if (response.result && response.result.fulfillment) {
             let responseText = response.result.fulfillment.speech;
             let responseData = response.result.fulfillment.data;
             let responseMessages = response.result.fulfillment.messages;
             if (responseText) {
-                return {text: responseText, userId: message.userId};
+                ack = {text: responseText, userId: message.userId};
             } else if (responseMessages) {
                 let textMessage = responseMessages.filter((m) => m.type === 0)[0].speech;
-                return {text: textMessage, userId: message.userId};
+                ack = {text: textMessage, userId: message.userId};
             } else {
-                return {text: 'no response', userId: message.userId};
+                ack = {text: 'no response', userId: message.userId};
             }
+        } else {
+            ack = {text: 'no response', userId: message.userId};
         }
+        return ack;
     }
 
     async _extractCreditCard(image) {

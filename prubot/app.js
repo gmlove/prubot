@@ -39,7 +39,7 @@ class Application {
 
 
 if (require.main === module) {
-    let bot = new PruBot(process.env.APIAI_ACCESS_TOKEN || 'b339df6ba3d144028e53cd6a8a3f4e50');
+    let bot = new PruBot(process.env.APIAI_ACCESS_TOKEN || '53ded8d59c684f69b381638d7e4ef7f0');
     let ocrService = new OCRService('AIzaSyBCmBskZqIYZAMi3CjB4cNRqJOv3K-sTHQ');
     new Application(3000, bot, ocrService).start();
     process.on('uncaughtException', (exception) => {
