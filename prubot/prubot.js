@@ -76,6 +76,7 @@ class PruBot {
         let response = await this._parseResponse(apiaiRequest);
         let ack = this.constructAck(message, response);
         this.dialogHistories.get(message.userId).push({q: message, a: ack});
+        console.log(`ack from bor: ${ack}`);
         return ack;
     }
 

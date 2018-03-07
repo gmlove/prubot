@@ -2,6 +2,7 @@ const Application = require('./app').Application;
 const expect = require('chai').expect;
 const fetch = require('node-fetch');
 const fs = require('fs');
+const FormData = require('form-data');
 
 describe('post chat message', () => {
     var app;
@@ -55,6 +56,26 @@ describe('post chat message', () => {
         expect(res.status).to.eq(200);
         expect(answer.text).to.not.be.empty;
         expect(answer.userId).to.eq('123');
+    });
+
+    it('should upload file', async () => {
+        const fileSizeInBytes = fs.statSync('resource_test/credit-card.png').size;
+        let readStream = fs.createReadStream('resource_test/credit-card.png');
+        let form = new FormData();
+        form.append('file', readStream);
+        let res = await new Promise((resolve, reject) => {
+            form.submit(`http://localhost:${app.port}/fileupload`, function(err, res) {
+                if (err) {
+                    return reject(err);
+                }
+                return resolve(res);
+            });
+        });
+        res = new String(res.read());
+        const uploadedFile = JSON.parse(res);
+        console.log(`uploaded file: ${uploadedFile.fileId}`);
+        expect(uploadedFile.fileId).to.not.be.empty;
+        fs.unlinkSync(`/tmp/${uploadedFile.fileId}`);
     });
 
 });
