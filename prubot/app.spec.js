@@ -5,14 +5,15 @@ const fs = require('fs');
 const FormData = require('form-data');
 
 describe('post chat message', () => {
-    var app;
+    var app, bot, botZh;
 
     before(() => {
         var port = Math.floor(Math.random() * 1000) + 12000;
         const PruBot = require('./prubot').PruBot;
         let ocrService = { recognize: async () => 'CREDIT CARD\n7253 3256 7895 1245\n5422.' };
-        let bot = new PruBot(process.env.APIAI_ACCESS_TOKEN || 'b339df6ba3d144028e53cd6a8a3f4e50', 'en', ocrService);
-        app = new Application(port, bot);
+        bot = new PruBot(process.env.APIAI_ACCESS_TOKEN || 'b339df6ba3d144028e53cd6a8a3f4e50', 'en', ocrService);
+        botZh = new PruBot(process.env.APIAI_ACCESS_TOKEN || 'a8d3cedea1c14ca0984c63622c391494', 'zh-HK', ocrService);
+        app = new Application(port, {en: bot, zh: botZh});
         app.start();
     });
 
@@ -76,6 +77,21 @@ describe('post chat message', () => {
         console.log(`uploaded file: ${uploadedFile.fileId}`);
         expect(uploadedFile.fileId).to.not.be.empty;
         fs.unlinkSync(`/tmp/${uploadedFile.fileId}`);
+    });
+
+    it.only('should change a language', async () => {
+        expect(app.bot).to.eq(botZh);
+        const res = await fetch(`http://localhost:${app.port}/language`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+                language: 'en'
+            })
+        });
+        await res.text();
+        expect(app.bot).to.eq(bot);
     });
 
 });

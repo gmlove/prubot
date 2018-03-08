@@ -7,11 +7,12 @@ const PruBot = require('./prubot').PruBot;
 const { OCRService } = require('./ocr');
 
 class Application {
-    constructor(port, bot) {
+    constructor(port, bots) {
         this.port = port;
         this.app = express();
         this.server = null;
-        this.bot = bot;
+        this.bots = bots;
+        this.bot = bots.zh;
     }
 
     start() {
@@ -34,6 +35,17 @@ class Application {
             let ackMessage = await this.bot.message(req.body);
             console.log('ack: ', JSON.stringify(ackMessage));
             res.json(ackMessage);
+        });
+
+        this.app.post('/language', (req, res) => {
+            console.log('request.body.keys: ', Object.keys(req.body));
+            this.bot = this.bots[req.body.language];
+            res.status(200).send('');
+        });
+
+        this.app.get('/chathistory/:userId', async (req, res) => {
+            let userId = 1;
+            res.json(this.chatRoom.getChatHistory(userId));
         });
 
         this.app.post('/fileupload', (req, res) => {
@@ -65,8 +77,9 @@ class Application {
 
 if (require.main === module) {
     let ocrService = new OCRService('AIzaSyBCmBskZqIYZAMi3CjB4cNRqJOv3K-sTHQ');
-    let bot = new PruBot(process.env.APIAI_ACCESS_TOKEN || '53ded8d59c684f69b381638d7e4ef7f0', 'en', ocrService);
-    new Application(3000, bot).start();
+    let bot = new PruBot(process.env.APIAI_ACCESS_TOKEN || 'a032527b1630406cabc35ded607bfba3', 'en', ocrService);
+    let botZh = new PruBot(process.env.APIAI_ACCESS_TOKEN || 'a8d3cedea1c14ca0984c63622c391494', 'zh', ocrService);
+    new Application(3000, {en: bot, zh: botZh}).start();
     process.on('uncaughtException', (exception) => {
         console.error('uncaughtException: ', exception);
         process.exit(1);
