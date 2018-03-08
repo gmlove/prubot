@@ -38,7 +38,7 @@ class Application {
         });
 
         this.app.post('/language', (req, res) => {
-            console.log('request.body.keys: ', Object.keys(req.body));
+            console.log('request.body: ', req.body);
             this.bot = this.bots[req.body.language];
             res.status(200).send('');
         });
@@ -82,7 +82,7 @@ class Application {
 if (require.main === module) {
     let ocrService = new OCRService('AIzaSyBCmBskZqIYZAMi3CjB4cNRqJOv3K-sTHQ');
     let bot = new PruBot(process.env.APIAI_ACCESS_TOKEN || 'a032527b1630406cabc35ded607bfba3', 'en', ocrService);
-    let botZh = new PruBot(process.env.APIAI_ACCESS_TOKEN || 'a8d3cedea1c14ca0984c63622c391494', 'zh', ocrService);
+    let botZh = new PruBot(process.env.APIAI_ACCESS_TOKEN || 'a8d3cedea1c14ca0984c63622c391494', 'zh-HK', ocrService);
     new Application(3000, {en: bot, zh: botZh}).start();
     process.on('uncaughtException', (exception) => {
         console.error('uncaughtException: ', exception);
