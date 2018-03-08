@@ -79,7 +79,7 @@ describe('post chat message', () => {
         fs.unlinkSync(`/tmp/${uploadedFile.fileId}`);
     });
 
-    it.only('should change a language', async () => {
+    it('should change a language', async () => {
         expect(app.bot).to.eq(botZh);
         const res = await fetch(`http://localhost:${app.port}/language`, {
             method: 'POST',
@@ -92,6 +92,12 @@ describe('post chat message', () => {
         });
         await res.text();
         expect(app.bot).to.eq(bot);
+    });
+
+    it.only('should get a claim', async () => {
+        const res = await fetch(`http://localhost:${app.port}/claim/123`);
+        let json = await res.json();
+        expect(json.amount).to.not.be.empty;
     });
 
 });

@@ -43,6 +43,10 @@ class Application {
             res.status(200).send('');
         });
 
+        this.app.get('/claim/:userId', (req, res) => {
+            res.status(200).send({amount: '5000 HKD'});
+        });
+
         this.app.get('/chathistory/:userId', async (req, res) => {
             let userId = 1;
             res.json(this.chatRoom.getChatHistory(userId));
