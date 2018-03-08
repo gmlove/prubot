@@ -89,11 +89,13 @@ class PruBot {
             let responseText = response.result.fulfillment.speech;
             let responseData = response.result.fulfillment.data;
             let responseMessages = response.result.fulfillment.messages;
-            if (responseText) {
-                ack = {text: responseText, userId: message.userId};
-            } else if (responseMessages) {
+            if (responseMessages) {
                 let textMessage = responseMessages.filter((m) => m.type === 0)[0].speech;
-                ack = {text: textMessage, userId: message.userId};
+                let payload = responseMessages.filter((m) => m.type === 4)[0];
+                payload = payload ? payload.payload : {};
+                ack = {text: textMessage, userId: message.userId, payload: payload};
+            } else if (responseText) {
+                ack = {text: responseText, userId: message.userId};
             } else {
                 ack = {text: 'no response', userId: message.userId};
             }

@@ -9,7 +9,7 @@ describe('post chat message', () => {
 
     before(() => {
         ocrService = sinon.createStubInstance(require('./ocr').OCRService);
-        bot = new PruBot('53ded8d59c684f69b381638d7e4ef7f0', 'en', ocrService);
+        bot = new PruBot('a032527b1630406cabc35ded607bfba3', 'en', ocrService);
     });
 
     it('should get an answer from api.ai bot service', async () => {
@@ -17,9 +17,11 @@ describe('post chat message', () => {
         expect(res.text).to.not.be.empty;
     });
 
-    it('should get a welcome answer when initiate', async () => {
+    it.only('should get a welcome answer when initiate', async () => {
         const res = await bot.message({userId: '123'});
         expect(res.text).to.not.be.empty;
+        console.log(JSON.stringify(res));
+        expect(res.payload).to.not.be.empty;
     });
 
     it('should get an answer from aip.ai for image', async () => {
