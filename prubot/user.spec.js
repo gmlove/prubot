@@ -14,4 +14,9 @@ describe('image recognizer', () => {
         expect(user).to.not.be.empty;
         expect(user.name).to.eq('Bob');
     });
+
+    it.only('should query user profile', async () => {
+        let profile = await userSerivce.queryProfile('C823928');
+        console.log('profile: ', profile);
+    });
 });
