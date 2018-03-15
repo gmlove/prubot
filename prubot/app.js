@@ -45,7 +45,13 @@ class Application {
         });
 
         this.app.get('/claim/:userId', (req, res) => {
-            res.status(200).send({ amount: '5000 HKD' });
+            res.status(200).send({
+                success: this.bot.claimFinished(parseInt(req.params.userId)),
+                claimNumber: '80224363',
+                policyNumber: '000011581234',
+                amount: '150000',
+                age: 35
+            });
         });
 
         this.app.get('/chathistory/:userId', async (req, res) => {

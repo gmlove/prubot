@@ -97,7 +97,8 @@ describe('post chat message', () => {
     it.only('should get a claim', async () => {
         const res = await fetch(`http://localhost:${app.port}/claim/123`);
         let json = await res.json();
-        expect(json.amount).to.not.be.empty;
+        console.log(json);
+        expect(json.success).to.not.be.undefined;
     });
 
 });
